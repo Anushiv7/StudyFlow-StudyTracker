@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "study_tracker.db")
+DB_PATH = os.path.join("/tmp", "study_tracker.db")
 
 
 def get_db():
