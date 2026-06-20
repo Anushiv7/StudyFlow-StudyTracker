@@ -36,6 +36,9 @@ def init_db():
         """)
         conn.commit()
 
+# IMPORTANT: Create tables when Vercel imports app.py
+init_db()
+
 
 # ── Routes ──────────────────────────────────────────────────────────────────
 
@@ -210,5 +213,4 @@ def weekly_stats():
 
 
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, port=5000)
