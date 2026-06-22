@@ -145,7 +145,7 @@ def stop_session(session_id):
             if not row:
                 return jsonify({"error": "Session not found"}), 404
             start = row["start_time"]
-            end = datetime.now(datetime.timezone.utc)
+            end = datetime.now(timezone.utc)
             duration = int((end - start).total_seconds())
             cur.execute(
                 "UPDATE sessions SET end_time = %s, duration_seconds = %s, notes = %s WHERE id = %s",
@@ -247,3 +247,4 @@ if __name__ == "__main__":
     # Disable debug mode by default for security
     debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
     app.run(debug=debug_mode, port=5000)
+_mode, port=5000)
