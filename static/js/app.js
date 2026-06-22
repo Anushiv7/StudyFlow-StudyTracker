@@ -33,7 +33,7 @@ function formatDurationTimer(seconds) {
 
 function formatDateTime(isoString) {
   if (!isoString) return "";
-  const d = new Date(isoString + "Z");
+  const d = new Date(isoString);
   return d.toLocaleString([], {
     month: "short", day: "numeric",
     hour: "2-digit", minute: "2-digit"
@@ -42,7 +42,7 @@ function formatDateTime(isoString) {
 
 function formatDate(isoString) {
   if (!isoString) return "";
-  const d = new Date(isoString + "Z");
+  const d = new Date(isoString);
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 }
 
