@@ -94,10 +94,16 @@ async function loadSubjects() {
 
 function renderSubjects() {
   const list = $("subjects-list");
+  const heroList = $("hero-subjects");
+
   if (!state.subjects.length) {
-    list.innerHTML = `<div class="empty-state">No subjects yet.<br>Add one above!</div>`;
+    const emptyMsg = `<div class="empty-state">No subjects yet.<br>Add one above!</div>`;
+    list.innerHTML = emptyMsg;
+    if (heroList) heroList.innerHTML = emptyMsg;
     return;
   }
+
+  // Main Management List (Dashboard)
   list.innerHTML = state.subjects.map(sub => {
     const totalSecs = state.sessions
       .filter(s => s.subject_id === sub.id)
@@ -112,6 +118,18 @@ function renderSubjects() {
           onclick="deleteSubject(event, ${sub.id})">✕</button>
       </div>`;
   }).join("");
+
+  // Quick Selector List (Hero)
+  if (heroList) {
+    heroList.innerHTML = state.subjects.map(sub => {
+      const active = sub.id === state.selectedSubjectId ? "active" : "";
+      return `
+        <div class="hero-subject-item ${active}" data-id="${sub.id}" onclick="selectSubject(${sub.id})">
+          <span class="subject-dot" style="background:${sub.color}"></span>
+          <span class="subject-name">${escHtml(sub.name)}</span>
+        </div>`;
+    }).join("");
+  }
 }
 
 function selectSubject(id) {
