@@ -5,7 +5,12 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-DB_PATH = os.path.join("/tmp", "study_tracker.db")
+# Configuration
+DEFAULT_COLOR = "#6366f1"
+DB_PATH = os.getenv(
+    "DATABASE_URL",
+    os.path.join(os.path.dirname(__file__), "study_tracker.db")
+)
 
 
 def get_db():
@@ -16,11 +21,11 @@ def get_db():
 
 def init_db():
     with get_db() as conn:
-        conn.executescript("""
+        conn.executescript(f"""
             CREATE TABLE IF NOT EXISTS subjects (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL UNIQUE,
-                color TEXT NOT NULL DEFAULT '#6366f1',
+                color TEXT NOT NULL DEFAULT '{DEFAULT_COLOR}',
                 created_at TEXT NOT NULL
             );
 
@@ -38,6 +43,20 @@ def init_db():
 
 # IMPORTANT: Create tables when Vercel imports app.py
 init_db()
+
+@app.after_request
+def add_security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    # CSP allows 'unsafe-inline' to support existing inline styles and onclick handlers in index.html
+    csp = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com;"
+    )
+    response.headers["Content-Security-Policy"] = csp
+    return response
 
 
 # ── Routes ──────────────────────────────────────────────────────────────────
@@ -62,7 +81,7 @@ def get_subjects():
 def add_subject():
     data = request.get_json()
     name = data.get("name", "").strip()
-    color = data.get("color", "#6366f1")
+    color = data.get("color", DEFAULT_COLOR)
     if not name:
         return jsonify({"error": "Subject name is required"}), 400
     try:
@@ -213,4 +232,6 @@ def weekly_stats():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Disable debug mode by default for security
+    debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
+    app.run(debug=debug_mode, port=5000)
