@@ -95,7 +95,7 @@ def add_subject():
                     "INSERT INTO subjects (name, color, created_at) VALUES (%s, %s, %s) RETURNING id",
                     (name, color, datetime.utcnow().isoformat()),
                 )
-                subject_id = cur.fetchone()[0]
+                subject_id = cur.fetchone()["id"]
                 conn.commit()
                 cur.execute("SELECT * FROM subjects WHERE id = %s", (subject_id,))
                 row = cur.fetchone()
@@ -127,7 +127,7 @@ def start_session():
                 "INSERT INTO sessions (subject_id, start_time) VALUES (%s, %s) RETURNING id",
                 (subject_id, datetime.utcnow().isoformat()),
             )
-            session_id = cur.fetchone()[0]
+            session_id = cur.fetchone()["id"]
             conn.commit()
             cur.execute("SELECT * FROM sessions WHERE id = %s", (session_id,))
             row = cur.fetchone()
