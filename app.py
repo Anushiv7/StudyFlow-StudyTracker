@@ -144,12 +144,12 @@ def stop_session(session_id):
             row = cur.fetchone()
             if not row:
                 return jsonify({"error": "Session not found"}), 404
-            start = datetime.fromisoformat(row["start_time"])
-            end = datetime.utcnow()
+            start = row["start_time"]
+            end = datetime.now(datetime.timezone.utc)
             duration = int((end - start).total_seconds())
             cur.execute(
                 "UPDATE sessions SET end_time = %s, duration_seconds = %s, notes = %s WHERE id = %s",
-                (end.isoformat(), duration, notes, session_id),
+                (end, duration, notes, session_id),
             )
             conn.commit()
             cur.execute(
