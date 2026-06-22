@@ -354,7 +354,7 @@ h1, h2, h3, .display-text {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-32);
+  padding: var(--spacing-12) var(--spacing-16);
   text-align: center;
   display: flex;
   flex-direction: column;
