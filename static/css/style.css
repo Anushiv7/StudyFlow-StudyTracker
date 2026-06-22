@@ -381,8 +381,6 @@ h1, h2, h3, .display-text {
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: var(--spacing-32);
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
 .dashboard-sidebar {
