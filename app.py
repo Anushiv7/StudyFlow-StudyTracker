@@ -48,9 +48,6 @@ def init_db():
             """)
             conn.commit()
 
-# IMPORTANT: Create tables when Vercel imports app.py
-init_db()
-
 @app.after_request
 def add_security_headers(response):
     response.headers["X-Content-Type-Options"] = "nosniff"
