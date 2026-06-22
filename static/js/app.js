@@ -8,6 +8,7 @@ const state = {
   elapsedSeconds: 0,
   selectedSubjectId: null,
   selectedSessionId: null,
+  theme: 'light',
 };
 
 // ── DOM refs ─────────────────────────────────────────────────────────────────
@@ -413,6 +414,17 @@ function escHtml(str) {
 
 // ── Event Listeners ────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
+  // Theme Initialization
+  const savedTheme = localStorage.getItem('studyflow-theme') || 'light';
+  state.theme = savedTheme;
+  setTheme(state.theme);
+
+  // Theme Toggle
+  $("btn-theme-toggle").addEventListener("click", () => {
+    const newTheme = state.theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+  });
+
   // Refresh
   $("btn-refresh").addEventListener("click", () => loadAll(true));
 
@@ -424,3 +436,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial load
   loadAll();
 });
+
+function setTheme(theme) {
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('studyflow-theme', theme);
+}
