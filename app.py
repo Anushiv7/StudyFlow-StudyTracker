@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import psycopg
 from psycopg.rows import dict_row
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 app = Flask(__name__)
 
@@ -247,4 +247,3 @@ if __name__ == "__main__":
     # Disable debug mode by default for security
     debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
     app.run(debug=debug_mode, port=5000)
-_mode, port=5000)
