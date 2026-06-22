@@ -39,54 +39,54 @@
     <main class="app-main">
       <!-- ── Hero Section ── -->
       <section class="hero-section">
-        <div id="timer-card" class="timer-card">
-          <div class="timer-subject-badge">
-            <span id="timer-badge-dot" class="subject-dot" style="background:var(--text-muted)"></span>
-            <span id="timer-badge-text">Select a subject</span>
-          </div>
-          <div id="timer-display" class="timer-display">00:00:00</div>
-          <div class="timer-label">elapsed time</div>
+        <div class="hero-container">
+          <div id="timer-card" class="timer-card">
+            <div class="timer-subject-badge">
+              <span id="timer-badge-dot" class="subject-dot" style="background:var(--text-muted)"></span>
+              <span id="timer-badge-text">Select a subject</span>
+            </div>
+            <div id="timer-display" class="timer-display">00:00:00</div>
+            <div class="timer-label">elapsed time</div>
 
-          <div class="timer-controls">
-            <button id="btn-start" class="btn btn-start" onclick="startTimer()">
-              ▶ Start Session
-            </button>
-            <button id="btn-stop" class="btn btn-stop" onclick="stopTimer()" style="display:none;">
-              ■ Stop Session
-            </button>
+            <div class="timer-controls">
+              <button id="btn-start" class="btn btn-start" onclick="startTimer()">
+                ▶ Start Session
+              </button>
+              <button id="btn-stop" class="btn btn-stop" onclick="stopTimer()" style="display:none;">
+                ■ Stop Session
+              </button>
+            </div>
+
+            <div id="notes-area" style="display:none;">
+              <textarea
+                id="session-notes"
+                class="session-notes"
+                rows="2"
+                placeholder="Session notes (optional)…"
+              ></textarea>
+            </div>
           </div>
 
-          <div id="notes-area" style="display:none;">
-            <textarea
-              id="session-notes"
-              class="session-notes"
-              rows="2"
-              placeholder="Session notes (optional)…"
-            ></textarea>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── KPI Stats Section ── -->
-      <section class="stats-section">
-        <div class="stats-row">
-          <div class="stat-card">
-            <div id="stat-total-time" class="stat-value">—</div>
-            <div class="stat-label">Total This Week</div>
-          </div>
-          <div class="stat-card">
-            <div id="stat-sessions" class="stat-value">—</div>
-            <div class="stat-label">Sessions</div>
-          </div>
-          <div class="stat-card">
-            <div id="stat-avg" class="stat-value">—</div>
-            <div class="stat-label">Avg. Duration</div>
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div id="stat-total-time" class="stat-value">—</div>
+              <div class="stat-label">Total This Week</div>
+            </div>
+            <div class="stat-card">
+              <div id="stat-sessions" class="stat-value">—</div>
+              <div class="stat-label">Sessions</div>
+            </div>
+            <div class="stat-card">
+              <div id="stat-avg" class="stat-value">—</div>
+              <div class="stat-label">Avg. Duration</div>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ── Dashboard Grid ── -->
       <div class="dashboard-grid">
+
 
         <!-- Left: Subject Performance Area -->
         <aside class="dashboard-sidebar">

@@ -199,7 +199,7 @@ h1, h2, h3, .display-text {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
-  padding: var(--spacing-64) var(--spacing-32);
+  padding: var(--spacing-32) var(--spacing-24);
   text-align: center;
   width: 100%;
   max-width: 600px;
