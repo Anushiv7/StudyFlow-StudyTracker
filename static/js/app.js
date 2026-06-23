@@ -1,3 +1,9 @@
+// ── Constants ────────────────────────────────────────────────────────────────
+const CURATED_COLORS = [
+  '#6366f1', '#8b5cf6', '#ec4899', '#ef4444', '#f97316', 
+  '#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#64748b'
+];
+
 // ── State ────────────────────────────────────────────────────────────────────
 const state = {
   subjects: [],
@@ -8,6 +14,7 @@ const state = {
   elapsedSeconds: 0,
   selectedSubjectId: null,
   selectedSessionId: null,
+  selectedColor: CURATED_COLORS[0],
   theme: 'light',
 };
 
@@ -143,15 +150,32 @@ function selectSubject(id) {
   renderSubjects();
 }
 
+function renderColorPalette() {
+  const palette = $("color-palette");
+  if (!palette) return;
+
+  palette.innerHTML = CURATED_COLORS.map(color => `
+    <div 
+      class="color-option ${color === state.selectedColor ? 'selected' : ''}" 
+      style="background:${color}" 
+      onclick="selectColor('${color}')"
+    ></div>
+  `).join("");
+}
+
+function selectColor(color) {
+  state.selectedColor = color;
+  renderColorPalette();
+}
+
 async function addSubject() {
   const nameInput = $("subject-name");
-  const colorInput = $("subject-color");
   const name = nameInput.value.trim();
   if (!name) { showToast("Enter a subject name", "error"); return; }
   try {
     const sub = await apiFetch("/api/subjects", {
       method: "POST",
-      body: JSON.stringify({ name, color: colorInput.value }),
+      body: JSON.stringify({ name, color: state.selectedColor }),
     });
     state.subjects.push(sub);
     nameInput.value = "";
@@ -452,6 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initial load
+  renderColorPalette();
   loadAll();
 });
 
