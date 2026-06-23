@@ -8,150 +8,156 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="app-wrapper">
-
-  <!-- ── Header ── -->
-  <header class="header">
-    <div class="header-brand">
-      <div class="brand-icon">📚</div>
-      <div>
-        <div class="brand-title">StudyFlow</div>
-        <div class="brand-subtitle">Your personal study tracker</div>
+  <div class="container">
+    <!-- ── Header ── -->
+    <header class="header">
+      <div class="header-brand">
+        <div class="brand-icon">📚</div>
+        <div>
+          <div class="brand-title">StudyFlow</div>
+          <div class="brand-subtitle">Your personal study tracker</div>
+        </div>
       </div>
-    </div>
-    <div class="header-actions">
-      <button id="btn-refresh" class="btn-refresh" title="Refresh data">
-        <span class="refresh-icon">↻</span>
-        <span class="spinner"></span>
-        Refresh
-      </button>
-    </div>
-  </header>
-
-  <!-- ── Main Grid ── -->
-  <div class="main-grid">
-
-    <!-- ── Left Sidebar ── -->
-    <aside>
-
-      <!-- Add Subject -->
-      <div class="card" style="margin-bottom:20px;">
-        <div class="card-title">
-          <div class="card-title-icon" style="background:rgba(99,102,241,0.12);">🎯</div>
-          Add Subject
-        </div>
-        <div class="input-group">
-          <input
-            id="subject-name"
-            class="input-text"
-            type="text"
-            placeholder="e.g. Mathematics"
-            maxlength="48"
-            autocomplete="off"
-          />
-          <input
-            id="subject-color"
-            class="input-color"
-            type="color"
-            value="#6366f1"
-            title="Pick subject color"
-          />
-        </div>
-        <button class="btn btn-primary btn-full" onclick="addSubject()">
-          + Add Subject
+      <div class="header-actions">
+        <button id="btn-theme-toggle" class="btn-theme-toggle" title="Toggle Theme">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark">🌙</span>
+        </button>
+        <button id="btn-refresh" class="btn-refresh" title="Refresh data">
+          <span class="refresh-icon">↻</span>
+          <span class="spinner"></span>
+          Refresh
         </button>
       </div>
+    </header>
 
-      <!-- Subject List -->
-      <div class="card">
-        <div class="card-title">
-          <div class="card-title-icon" style="background:rgba(139,92,246,0.12);">📖</div>
-          Subjects
+    <main class="app-main">
+      <!-- ── Hero Section ── -->
+      <section class="hero-section">
+        <div class="hero-container">
+          <!-- Quick Subject Selector -->
+          <div id="hero-subjects" class="hero-subjects"></div>
+
+          <div id="timer-card" class="timer-card">
+            <div class="timer-subject-badge">
+              <span id="timer-badge-dot" class="subject-dot" style="background:var(--text-muted)"></span>
+              <span id="timer-badge-text">Select a subject</span>
+            </div>
+            <div id="timer-display" class="timer-display">00:00:00</div>
+            <div class="timer-label">elapsed time</div>
+
+            <div class="timer-controls">
+              <button id="btn-start" class="btn btn-start" onclick="startTimer()">
+                ▶ Start Session
+              </button>
+              <button id="btn-stop" class="btn btn-stop" onclick="stopTimer()" style="display:none;">
+                ■ Stop Session
+              </button>
+            </div>
+
+            <div id="notes-area" style="display:none;">
+              <textarea
+                id="session-notes"
+                class="session-notes"
+                rows="2"
+                placeholder="Session notes (optional)…"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div id="stat-total-time" class="stat-value">—</div>
+              <div class="stat-label">Total This Week</div>
+            </div>
+            <div class="stat-card">
+              <div id="stat-sessions" class="stat-value">—</div>
+              <div class="stat-label">Sessions</div>
+            </div>
+            <div class="stat-card">
+              <div id="stat-avg" class="stat-value">—</div>
+              <div class="stat-label">Avg. Duration</div>
+            </div>
+          </div>
         </div>
-        <div id="subjects-list" class="subjects-list"></div>
+      </section>
+
+      <!-- ── Dashboard Grid ── -->
+      <div class="dashboard-grid">
+
+
+        <!-- Left: Subject Performance Area -->
+        <aside class="dashboard-sidebar">
+          <!-- Add Subject -->
+          <div class="card subject-mgmt-card">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(99,102,241,0.12);">🎯</div>
+              Add Subject
+            </div>
+            <div class="input-group">
+              <input
+                id="subject-name"
+                class="input-text"
+                type="text"
+                placeholder="e.g. Mathematics"
+                maxlength="48"
+                autocomplete="off"
+              />
+              <div id="color-palette" class="color-palette"></div>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="addSubject()">
+              + Add Subject
+            </button>
+          </div>
+
+          <!-- Subject List -->
+          <div class="card">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(139,92,246,0.12);">📖</div>
+              Subjects
+            </div>
+            <div id="subjects-list" class="subjects-list"></div>
+          </div>
+        </aside>
+
+        <!-- Right: Analytics/Charts Section -->
+        <main class="dashboard-main">
+          <!-- Bar Chart -->
+          <div class="chart-container">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(99,102,241,0.12);">📊</div>
+              Daily Study Time (This Week)
+            </div>
+            <div id="chart-bars" class="chart-bar-group"></div>
+          </div>
+
+          <!-- Subject Breakdown -->
+          <div class="subject-breakdown">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(236,72,153,0.12);">🏆</div>
+              Subject Breakdown
+            </div>
+            <div id="breakdown-list"></div>
+          </div>
+        </main>
       </div>
 
-    </aside>
-
-    <!-- ── Right Panel ── -->
-    <main>
-
-      <!-- Timer -->
-      <div id="timer-card" class="timer-card" style="margin-bottom:24px;">
-        <div class="timer-subject-badge">
-          <span id="timer-badge-dot" class="subject-dot" style="background:var(--text-muted)"></span>
-          <span id="timer-badge-text">Select a subject</span>
-        </div>
-        <div id="timer-display" class="timer-display">00:00:00</div>
-        <div class="timer-label">elapsed time</div>
-
-        <div class="timer-controls">
-          <button id="btn-start" class="btn btn-start" onclick="startTimer()">
-            ▶ Start Session
-          </button>
-          <button id="btn-stop" class="btn btn-stop" onclick="stopTimer()" style="display:none;">
-            ■ Stop Session
-          </button>
-        </div>
-
-        <div id="notes-area" style="display:none;">
-          <textarea
-            id="session-notes"
-            class="session-notes"
-            rows="2"
-            placeholder="Session notes (optional)…"
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Weekly Summary Cards -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div id="stat-total-time" class="stat-value">—</div>
-          <div class="stat-label">Total This Week</div>
-        </div>
-        <div class="stat-card">
-          <div id="stat-sessions" class="stat-value">—</div>
-          <div class="stat-label">Sessions</div>
-        </div>
-        <div class="stat-card">
-          <div id="stat-avg" class="stat-value">—</div>
-          <div class="stat-label">Avg. Duration</div>
-        </div>
-      </div>
-
-      <!-- Bar Chart -->
-      <div class="chart-container" style="margin-bottom:24px;">
-        <div class="card-title" style="margin-bottom:16px;">
-          <div class="card-title-icon" style="background:rgba(99,102,241,0.12);">📊</div>
-          Daily Study Time (This Week)
-        </div>
-        <div id="chart-bars" class="chart-bar-group"></div>
-      </div>
-
-      <!-- Subject Breakdown -->
-      <div class="subject-breakdown" style="margin-bottom:24px;">
-        <div class="card-title" style="margin-bottom:16px;">
-          <div class="card-title-icon" style="background:rgba(236,72,153,0.12);">🏆</div>
-          Subject Breakdown
-        </div>
-        <div id="breakdown-list"></div>
-      </div>
-
-      <!-- Session History -->
-      <div class="sessions-section">
+      <!-- ── Session History Section ── -->
+      <section class="sessions-section">
         <div class="sessions-header">
-          <div class="card-title" style="margin-bottom:0;">
+          <div class="card-title">
             <div class="card-title-icon" style="background:rgba(16,185,129,0.12);">🕐</div>
             Session History (Last 7 Days)
           </div>
         </div>
 
-        <!-- Tweet action bar (shows when a session is selected) -->
-        <div id="tweet-bar" class="tweet-bar" style="margin-top:16px;">
+        <!-- Tweet action bar -->
+        <div id="tweet-bar" class="tweet-bar">
           <span class="tweet-bar-text">
             Selected: <span id="tweet-bar-preview"></span>
           </span>
@@ -168,8 +174,7 @@
 
         <div class="divider"></div>
         <div id="session-list" class="session-list"></div>
-      </div>
-
+      </section>
     </main>
   </div>
 </div>

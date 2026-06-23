@@ -1,3 +1,9 @@
+// ── Constants ────────────────────────────────────────────────────────────────
+const CURATED_COLORS = [
+  '#6366f1', '#8b5cf6', '#ec4899', '#ef4444', '#f97316', 
+  '#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#64748b'
+];
+
 // ── State ────────────────────────────────────────────────────────────────────
 const state = {
   subjects: [],
@@ -8,6 +14,8 @@ const state = {
   elapsedSeconds: 0,
   selectedSubjectId: null,
   selectedSessionId: null,
+  selectedColor: CURATED_COLORS[0],
+  theme: 'light',
 };
 
 // ── DOM refs ─────────────────────────────────────────────────────────────────
@@ -93,10 +101,16 @@ async function loadSubjects() {
 
 function renderSubjects() {
   const list = $("subjects-list");
+  const heroList = $("hero-subjects");
+
   if (!state.subjects.length) {
-    list.innerHTML = `<div class="empty-state">No subjects yet.<br>Add one above!</div>`;
+    const emptyMsg = `<div class="empty-state">No subjects yet.<br>Add one above!</div>`;
+    list.innerHTML = emptyMsg;
+    if (heroList) heroList.innerHTML = emptyMsg;
     return;
   }
+
+  // Main Management List (Dashboard)
   list.innerHTML = state.subjects.map(sub => {
     const totalSecs = state.sessions
       .filter(s => s.subject_id === sub.id)
@@ -111,6 +125,18 @@ function renderSubjects() {
           onclick="deleteSubject(event, ${sub.id})">✕</button>
       </div>`;
   }).join("");
+
+  // Quick Selector List (Hero)
+  if (heroList) {
+    heroList.innerHTML = state.subjects.map(sub => {
+      const active = sub.id === state.selectedSubjectId ? "active" : "";
+      return `
+        <div class="hero-subject-item ${active}" data-id="${sub.id}" onclick="selectSubject(${sub.id})">
+          <span class="subject-dot" style="background:${sub.color}"></span>
+          <span class="subject-name">${escHtml(sub.name)}</span>
+        </div>`;
+    }).join("");
+  }
 }
 
 function selectSubject(id) {
@@ -124,15 +150,32 @@ function selectSubject(id) {
   renderSubjects();
 }
 
+function renderColorPalette() {
+  const palette = $("color-palette");
+  if (!palette) return;
+
+  palette.innerHTML = CURATED_COLORS.map(color => `
+    <div 
+      class="color-option ${color === state.selectedColor ? 'selected' : ''}" 
+      style="background:${color}" 
+      onclick="selectColor('${color}')"
+    ></div>
+  `).join("");
+}
+
+function selectColor(color) {
+  state.selectedColor = color;
+  renderColorPalette();
+}
+
 async function addSubject() {
   const nameInput = $("subject-name");
-  const colorInput = $("subject-color");
   const name = nameInput.value.trim();
   if (!name) { showToast("Enter a subject name", "error"); return; }
   try {
     const sub = await apiFetch("/api/subjects", {
       method: "POST",
-      body: JSON.stringify({ name, color: colorInput.value }),
+      body: JSON.stringify({ name, color: state.selectedColor }),
     });
     state.subjects.push(sub);
     nameInput.value = "";
@@ -413,6 +456,17 @@ function escHtml(str) {
 
 // ── Event Listeners ────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
+  // Theme Initialization
+  const savedTheme = localStorage.getItem('studyflow-theme') || 'light';
+  state.theme = savedTheme;
+  setTheme(state.theme);
+
+  // Theme Toggle
+  $("btn-theme-toggle").addEventListener("click", () => {
+    const newTheme = state.theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+  });
+
   // Refresh
   $("btn-refresh").addEventListener("click", () => loadAll(true));
 
@@ -422,5 +476,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initial load
+  renderColorPalette();
   loadAll();
 });
+
+function setTheme(theme) {
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('studyflow-theme', theme);
+}
