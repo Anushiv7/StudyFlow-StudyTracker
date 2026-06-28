@@ -32,7 +32,7 @@ Log sessions, time yourself, visualise your week, and share your wins on X (Twit
 
 > **Full app overview — timer, weekly stats, session history & subject sidebar**
 
-![StudyFlow App Preview](docs/screenshots/app-preview.jpg)
+![StudyFlow App Preview](docs/screenshots/image.png)
 
 ---
 
