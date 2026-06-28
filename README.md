@@ -171,5 +171,3 @@ This project is licensed under the **MIT License**.
 
 Made with ❤️ by [Anushiv7](https://github.com/Anushiv7)
 
-</div>
-"YOLO badge attempt" 
